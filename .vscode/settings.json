@@ -1,0 +1,20 @@
+{
+  // Форматтер для Ruby — Shopify.ruby-lsp.
+  // Перебивает глобальную настройку "[ruby]" -> castwide.solargraph,
+  // из-за которой код форматировался дефолтным RuboCop и переписывался.
+  "[ruby]": {
+    "editor.defaultFormatter": "Shopify.ruby-lsp",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true
+  },
+  // Форматирование идёт через .rubocop.yml, где включён только Layout.
+  // Полный набор советов — .rubocop_lint.yml, запуск: bin/lint
+  "rubyLsp.formatter": "rubocop_internal",
+  "rubyLsp.linters": ["rubocop_internal"],
+  "rubyLsp.rubyVersionManager": {
+    "identifier": "rvm"
+  },
+  // Главное: Solargraph больше не форматирует.
+  "solargraph.formatting": false
+}

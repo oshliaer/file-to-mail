@@ -1,0 +1,28 @@
+# КОНФИГ ФОРМАТИРОВАНИЯ.
+# Применяется автоматически при сохранении файла в редакторе.
+#
+# Включён ровно один департамент — Layout. Это правила про раскладку:
+# отступы, пробелы вокруг операторов, переносы, пустые строки.
+#
+# Всё остальное (Style, Lint, Metrics) отключено ЗДЕСЬ намеренно.
+# Именно эти департаменты переписывают код: Style/GuardClause схлопывает
+# `unless ... end` в `return ... unless`, Lint/UselessAssignment удаляет
+# присвоения. Полный набор советов — в .rubocop_lint.yml, запуск: bin/lint
+
+AllCops:
+  TargetRubyVersion: 3.4
+  DisabledByDefault: true
+  Exclude:
+    - 'vendor/**/*'
+    - '.ruby-lsp/**/*'
+
+Layout:
+  Enabled: true
+
+# В heredoc с HTML хвостовые пробелы значимы для вёрстки, а автоправка
+# превращает их в `#{'   '}` — нечитаемо. Чистим только вне heredoc.
+Layout/TrailingWhitespace:
+  AllowInHeredoc: true
+
+Layout/LineLength:
+  Enabled: false

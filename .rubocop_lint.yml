@@ -1,0 +1,26 @@
+# КОНФИГ ЛИНТА.
+# Автоматически НЕ применяется. Запуск: bin/lint
+#
+# Полный набор правил RuboCop — советы для чтения. Применять их
+# или нет, решаешь ты; форматтер их не трогает.
+
+AllCops:
+  TargetRubyVersion: 3.4
+  NewCops: enable
+  Exclude:
+    - 'vendor/**/*'
+    - '.ruby-lsp/**/*'
+
+# Sinatra-приложение в одном файле — это скрипт, а не библиотека.
+Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+# Комментарии и строки на русском.
+Style/AsciiComments:
+  Enabled: false
+
+Layout/LineLength:
+  Max: 120
