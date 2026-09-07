@@ -29,7 +29,7 @@ get '/' do
     <body style="font-family: sans-serif; max-width: 400px; margin: 40px auto;">
       <h2>Отправить файл на почту</h2>
       
-      <!-- Форма, которая будет отправлять данные методом POST на адрес /send -->
+      <!-- Форма, которая будет отправлять данные методом POST на адрес /send_email -->
       <form action="/send_email" method="post" enctype="multipart/form-data">
         <p>
           <label>Кому (Email):<br>
