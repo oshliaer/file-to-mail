@@ -6,17 +6,21 @@ require 'dotenv'
 # Загрузка переменных окружения из файла .env
 Dotenv.load
 
-set :bind, ENV.fetch('APP_ADDRESS', '127.0.0.0')
+set :bind, ENV.fetch('APP_ADDRESS', '127.0.0.1')
 set :port, Integer(ENV.fetch('APP_PORT', 8080))
 
 SMTP_OPTIONS = {
-  address: ENV.fetch('SMTP_ADDRESS'),
-  port: Integer(ENV.fetch('SMTP_PORT')),
+  address: ENV.fetch('SMTP_ADDRESS'), # 'smtp.mail.ru'
+  port: Integer(ENV.fetch('SMTP_PORT')), # 465
   user_name: ENV.fetch('SMTP_USER_NAME'),
   password: ENV.fetch('SMTP_PASSWORD'),
-  authentication: 'plain',
-  enable_ssl: true,
-  enable_starttls_auto: true
+  authentication: :plain, # В Ruby лучше использовать символ :plain, а не строку 'plain'
+
+  # Вот эта связка лечит таймаут на Mail.ru:
+  ssl: true,                    # Включаем жесткий SSL для порта 465
+  tls: true,                    # Дублируем для совместимости с net/smtp
+  enable_starttls: false, # Намертво КАТЕГОРИЧЕСКИ ОТКЛЮЧАЕМ starttls
+  enable_starttls_auto: false # Отключаем авто-попытки включить starttls
 }
 
 get '/' do
@@ -52,14 +56,25 @@ end
 post '/send_email' do
   return 'Missing parameters. Please provide both "to" and "file".' unless params[:to] && params[:file]
 
-  params[:to]
-  params[:subject] || 'No Subject'
-  params[:file][:tempfile]
-  params[:file][:filename]
+  to_address = params[:to]
+  subject = params[:subject] || 'No Subject'
+  body = params[:body] || 'Please find the attached file.'
+  file_name = params[:file][:filename]
+  file_tmp = params[:file][:tempfile]
 
-  Mail.defaults do
-    delivery_method :smtp, SMTP_OPTIONS
+  begin
+    Mail.deliver do
+      delivery_method :smtp, SMTP_OPTIONS
+      from SMTP_OPTIONS[:user_name]
+      to to_address
+      subject subject
+      body body
+      add_file filename: file_name, content: file_tmp.read
+    end
+  rescue StandardError => e
+    status 500
+    safe_error = Rack::Utils.escape_html(e.message)
+    "<h3>Ошибка отправки:</h3><pre style='color:red;'>#{safe_error.message}</pre><a href='/'>Назад</a>"
   end
-
-  'OK'
+  "Успешно отправлено #{to_address}. <a href='/'>Назад</a>"
 end
