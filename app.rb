@@ -56,10 +56,6 @@ end
 post '/send_email' do
   return 'Missing parameters. Please provide both "to" and "file".' unless params[:to] && params[:file]
 
-  Mail.defaults do
-    delivery_method :smtp, SMTP_OPTIONS
-  end
-
   to_address = params[:to]
   subject = params[:subject] || 'No Subject'
   body = params[:body] || 'Please find the attached file.'
@@ -68,6 +64,7 @@ post '/send_email' do
 
   begin
     Mail.deliver do
+      delivery_method :smtp, SMTP_OPTIONS
       from SMTP_OPTIONS[:user_name]
       to to_address
       subject subject
@@ -78,4 +75,5 @@ post '/send_email' do
     status 500
     "<h3>Ошибка отправки:</h3><pre style='color:red;'>#{e.message}</pre><a href='/'>Назад</a>"
   end
+  "Успешно отправлено #{to_address}. <a href='/'>Назад</a>"
 end

@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-# Показать советы RuboCop по коду. Ничего не изменяет — только читает.
-#
-#   bin/lint              — весь проект
-#   bin/lint app.rb       — конкретный файл
-set -euo pipefail
-cd "$(dirname "$0")/.."
-exec bundle exec rubocop --config .rubocop_lint.yml "$@"
