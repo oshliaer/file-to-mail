@@ -73,7 +73,8 @@ post '/send_email' do
     end
   rescue StandardError => e
     status 500
-    "<h3>Ошибка отправки:</h3><pre style='color:red;'>#{e.message}</pre><a href='/'>Назад</a>"
+    safe_error = Rack::Utils.escape_html(e.message)
+    "<h3>Ошибка отправки:</h3><pre style='color:red;'>#{safe_error.message}</pre><a href='/'>Назад</a>"
   end
   "Успешно отправлено #{to_address}. <a href='/'>Назад</a>"
 end
