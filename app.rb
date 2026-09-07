@@ -6,14 +6,14 @@ require 'dotenv'
 # Загрузка переменных окружения из файла .env
 Dotenv.load
 
-set :bind, ENV['APP_ADDRESS'] || '0.0.0.0'
-set :port, ENV['APP_PORT'] ? ENV['APP_PORT'].to_i : 8080
+set :bind, ENV.fetch('APP_ADDRESS', '127.0.0.1')
+set :port, Integer(ENV.fetch('APP_PORT', 8080))
 
 SMTP_OPTIONS = {
-  address: ENV['SMTP_ADDRESS'], # 'smtp.mail.ru'
-  port: ENV['SMTP_PORT'].to_i, # 465
-  user_name: ENV['SMTP_USER_NAME'],
-  password: ENV['SMTP_PASSWORD'],
+  address: ENV.fetch('SMTP_ADDRESS'), # 'smtp.mail.ru'
+  port: Integer(ENV.fetch('SMTP_PORT')), # 465
+  user_name: ENV.fetch('SMTP_USER_NAME'),
+  password: ENV.fetch('SMTP_PASSWORD'),
   authentication: :plain, # В Ruby лучше использовать символ :plain, а не строку 'plain'
 
   # Вот эта связка лечит таймаут на Mail.ru:
@@ -32,8 +32,8 @@ get '/' do
     </head>
     <body style="font-family: sans-serif; max-width: 400px; margin: 40px auto;">
       <h2>Отправить файл на почту</h2>
-    #{'  '}
-      <!-- Форма, которая будет отправлять данные методом POST на адрес /send -->
+      
+      <!-- Форма, которая будет отправлять данные методом POST на адрес /send_email -->
       <form action="/send_email" method="post" enctype="multipart/form-data">
         <p>
           <label>Кому (Email):<br>
