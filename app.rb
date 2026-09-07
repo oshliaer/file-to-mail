@@ -6,7 +6,7 @@ require 'dotenv'
 # Загрузка переменных окружения из файла .env
 Dotenv.load
 
-set :bind, ENV['APP_ADDRESS'] || '0.0.0.0'
+set :bind, ENV['APP_ADDRESS'] || '127.0.0.0'
 set :port, ENV['APP_PORT'] ? ENV['APP_PORT'].to_i : 8080
 
 SMTP_OPTIONS = {
